@@ -13,7 +13,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
             contract: "MockV3Aggregator",
             from: deployer,
             log: true,
-            args: [DECIMALS, INITIAL_PRICE],
+            args: [DECIMALS, INITIAL_PRICE], //arguments for the constructor of the contract
         })
         log("Mocks Deployed!")
         log("------------------------------------------------")
@@ -26,4 +26,4 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         log("------------------------------------------------")
     }
 }
-module.exports.tags = ["all", "mocks"]
+module.exports.tags = ["all", "mocks"] //tags can be used by doing | yarn hardhat deploy --tags "tagname" | this will run all contracts with that tagname

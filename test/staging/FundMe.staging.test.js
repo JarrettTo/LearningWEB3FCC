@@ -3,7 +3,7 @@ const { network, ethers, getNamedAccounts } = require("hardhat")
 const { developmentChains } = require("../../helper-hardhat-config")
 
 developmentChains.includes(network.name)
-    ? describe.skip
+    ? describe.skip         //? means if its true () : means if it is false
     : describe("FundMe Staging Tests", async function () {
           let deployer
           let fundMe

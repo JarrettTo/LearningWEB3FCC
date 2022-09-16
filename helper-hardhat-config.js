@@ -14,9 +14,9 @@ const networkConfig = {
     },
 }
 
-const developmentChains = ["hardhat", "localhost"]
+const developmentChains = ["hardhat", "localhost"] 
 
-module.exports = {
+module.exports = {  // everything labeled under module.exports is exported and thus accessible to other files
     networkConfig,
     developmentChains,
 }

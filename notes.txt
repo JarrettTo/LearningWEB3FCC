@@ -1,0 +1,15 @@
+- lint analyses ur code for errors and formating mistakes
+
+To lint solidity contract:
+yarn solhint contracts/*.sol
+
+To use hardhat deploy:
+yarn add --dev hardhat-deploy
+yarn add --dev @nomiclabs/hardhat-ethers@npm:hardhat-deploy-ethers ethers
+yarn hardhat deploy --network "network"
+
+
+Debugging anD Testing:
+- You can use ur debugging tool on vsc to see differengt variables and their elements which u can then locate
+    - For example:
+        u can get the gas used by check transactionReceipt, where u'll gasUsed and effectiveGasPrice, multiply the 2 and thats the amount of eth used

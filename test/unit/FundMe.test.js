@@ -8,13 +8,13 @@ const { developmentChains } = require("../../helper-hardhat-config")
           let fundMe
           let mockV3Aggregator
           let deployer
-          const sendValue = ethers.utils.parseEther("1")
+          const sendValue = ethers.utils.parseEther("1") //turns 1 eth into its gwei equivalent
           beforeEach(async () => {
               // const accounts = await ethers.getSigners()
               // deployer = accounts[0]
               deployer = (await getNamedAccounts()).deployer
-              await deployments.fixture(["all"])
-              fundMe = await ethers.getContract("FundMe", deployer)
+              await deployments.fixture(["all"]) //basically like doing "yarn hardhat deploy --tags all"
+              fundMe = await ethers.getContract("FundMe", deployer) //connects the contract to the deployer
               mockV3Aggregator = await ethers.getContract(
                   "MockV3Aggregator",
                   deployer
@@ -32,7 +32,7 @@ const { developmentChains } = require("../../helper-hardhat-config")
               // https://ethereum-waffle.readthedocs.io/en/latest/matchers.html
               // could also do assert.fail
               it("Fails if you don't send enough ETH", async () => {
-                  await expect(fundMe.fund()).to.be.revertedWith(
+                  await expect(fundMe.fund()).to.be.revertedWith(           //we use this instead of assert in cases where if it errors it should still go back
                       "You need to spend more ETH!"
                   )
               })
@@ -58,9 +58,9 @@ const { developmentChains } = require("../../helper-hardhat-config")
               it("withdraws ETH from a single funder", async () => {
                   // Arrange
                   const startingFundMeBalance =
-                      await fundMe.provider.getBalance(fundMe.address)
+                      await fundMe.provider.getBalance(fundMe.address)  //balance of contract address
                   const startingDeployerBalance =
-                      await fundMe.provider.getBalance(deployer)
+                      await fundMe.provider.getBalance(deployer)        //balance of deployer address
 
                   // Act
                   const transactionResponse = await fundMe.withdraw()
@@ -105,7 +105,7 @@ const { developmentChains } = require("../../helper-hardhat-config")
                   // Let's comapre gas costs :)
                   // const transactionResponse = await fundMe.withdraw()
                   const transactionReceipt = await transactionResponse.wait()
-                  const { gasUsed, effectiveGasPrice } = transactionReceipt
+                  const { gasUsed, effectiveGasPrice } = transactionReceipt //check notes.txt about debugging
                   const withdrawGasCost = gasUsed.mul(effectiveGasPrice)
                   console.log(`GasCost: ${withdrawGasCost}`)
                   console.log(`GasUsed: ${gasUsed}`)
@@ -135,7 +135,7 @@ const { developmentChains } = require("../../helper-hardhat-config")
                   }
               })
               it("Only allows the owner to withdraw", async function () {
-                  const accounts = await ethers.getSigners()
+                  const accounts = await ethers.getSigners()      //returns the connected accounts
                   const fundMeConnectedContract = await fundMe.connect(
                       accounts[1]
                   )

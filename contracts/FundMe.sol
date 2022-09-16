@@ -6,8 +6,9 @@ import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "./PriceConverter.sol";
 
 // 3. Interfaces, Libraries, Contracts
-error FundMe__NotOwner();
+error FundMe__NotOwner();  //make sure to add "ContractName__Errors"
 
+//add natspec for contract
 /**@title A sample Funding Contract
  * @author Patrick Collins
  * @notice This contract is for creating a sample funding contract
@@ -15,9 +16,9 @@ error FundMe__NotOwner();
  */
 contract FundMe {
     // Type Declarations
-    using PriceConverter for uint256;
+    using PriceConverter for uint256; //allows us to use priceconverter library for all uint256 objects
 
-    // State variables
+    // State variables (Keep variables private and then add getters for them (cheaper in gas))
     uint256 public constant MINIMUM_USD = 50 * 10**18;
     address private immutable i_owner;
     address[] private s_funders;
@@ -51,7 +52,7 @@ contract FundMe {
     /// @notice Funds our contract based on the ETH/USD price
     function fund() public payable {
         require(
-            msg.value.getConversionRate(s_priceFeed) >= MINIMUM_USD,
+            msg.value.getConversionRate(s_priceFeed) >= MINIMUM_USD, //dont need to set amount parametter, since we decalred all uint256 to have access to price converter lib in line 18, itll automatically assume that amount variable's value is the variable value as well
             "You need to spend more ETH!"
         );
         // require(PriceConverter.getConversionRate(msg.value) >= MINIMUM_USD, "You need to spend more ETH!");
@@ -69,14 +70,20 @@ contract FundMe {
             s_addressToAmountFunded[funder] = 0;
         }
         s_funders = new address[](0);
-        // Transfer vs call vs Send
-        // payable(msg.sender).transfer(address(this).balance);
-        (bool success, ) = i_owner.call{value: address(this).balance}("");
+        
+        /*funders=new address[](0); //reset or empty funders without a for loop
+        //transfer throws an error if it doesnt go through and also reverts the transaction if it fails, costs 2300 gas
+        payable(msg.sender).transfer(address(this).balance); //'this' refers to the entire contract. we also need to turn msg.sender to a payable address for us to send txns to or from it
+        //send returns a bool and it only reverts if u add the require expression, costs 2300 gas
+        bool sendSuccess=  payable(msg.sender).send(address(this).balance);
+        require(sendSuccess, "didnt work");
+        //call is low-level expression that is very powerful, there is no cap for gas but it is considered to be rthe best way to send eth rn*/
+        (bool success, ) = i_owner.call{value: address(this).balance}(""); 
         require(success);
     }
 
     function cheaperWithdraw() public onlyOwner {
-        address[] memory funders = s_funders;
+        address[] memory funders = s_funders;       //memory is cheaper than storage, creating a copy of s_funders but storing it in memory which is cheaper
         // mappings can't be in memory, sorry!
         for (
             uint256 funderIndex = 0;
